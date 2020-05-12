@@ -1,8 +1,8 @@
-from flask import Flask
+from api import app, db
+from api.models.user import User
+from api.routes.routes import *
 
-app = Flask(__name__)
 
-
-@app.route('/v1/api')
-def index():
-    return {'greeting': 'Hello World!'}
+with app.test_request_context():
+     db.init_app(app)
+     db.create_all()
