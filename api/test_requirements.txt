@@ -1,0 +1,7 @@
+-r requirements.txt
+
+black==19.10b0
+flake8==3.7.9
+ipdb
+pytest==5.4.1
+python-dotenv==0.13.0

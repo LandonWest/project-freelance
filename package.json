@@ -13,6 +13,9 @@
   "scripts": {
     "start": "react-scripts start",
     "start-api": "cd api && venv/bin/flask run --no-debugger",
+    "api-create-venv": "cd api && python -m venv venv",
+    "api-install": "cd api source venv/bin/activate && venv/bin/pip install -r test_requirements.txt",
+    "api-remove-venv": "cd api && deactivate && rm -rf venv",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
