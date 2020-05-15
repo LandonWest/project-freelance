@@ -1,0 +1,2 @@
+class PublicIDCreationError(Exception):
+    pass

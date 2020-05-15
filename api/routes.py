@@ -1,5 +1,7 @@
-from api import app, db
+from api.app import app, db
+from api.models.address import Address
 from api.models.user import User
+
 
 @app.route('/')
 def index():
@@ -22,6 +24,7 @@ def create_user(params=None):
         "lastname": found_user.lastname,
         "email": found_user.email,
     }
+
 
 @app.route('/api/v1/user/<int:id>')
 def lookup_user(id):

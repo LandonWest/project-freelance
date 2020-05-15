@@ -1,21 +1,42 @@
-from api import db
+from api.app import db, ma
+
+from api.utils import generate_public_id
+
 
 class User(db.Model):
+    """docstring for User"""
+
+    generate_user_id = generate_public_id("User")
+
+    __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
-    # pub_id = db.Column(db.Integer, )
+    public_id = db.Column(
+        db.String, unique=True, nullable=False, default=generate_user_id
+    )
     firstname = db.Column(db.String(40), nullable=False)
     lastname = db.Column(db.String(40), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String, nullable=False)
     company = db.Column(db.String(120))
-    street_1 = db.Column(db.String(120))
-    street_2 = db.Column(db.String(120))
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(2))
-    postal_code =db.Column(db.String(20))
-    country_code = db.Column(db.String(2))
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(40))
+    password_hash = db.Column(db.String, nullable=False)
     personal_url_1 = db.Column(db.String(120))
     personal_url_2 = db.Column(db.String(120))
     personal_url_3 = db.Column(db.String(120))
+
+    address = db.relationship("Address", uselist=False, backref=db.backref("users"))
     # photo
     # logo
+
+    def __repr__(self):
+        return (
+            f'<User public_id="{self.public_id}", '
+            + f'firstname="{self.firstname}", '
+            + f'lastname="{self.lastname}", '
+            + f'company="{self.company}", '
+            + f'email="{self.email}", '
+            + f'phone="{self.phone}", '
+            + f'personal_url_1="{self.personal_url_1}", '
+            + f'personal_url_2="{self.personal_url_2}", '
+            + f'personal_url_3="{self.personal_url_3}"'
+        )
