@@ -5,6 +5,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+
 # Initialize app
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))

@@ -31,6 +31,8 @@ activate` manually...
 
 We are using Flask-Migrate which is a wrapper to use Alembic for db migrations in Flask (see: https://flask-migrate.readthedocs.io/en/latest/#api-reference )
 
+Using venv and from within /api:
+
 Initialize the Database: `flask db upgrade`
 
 Create a Migration: `flask db migrate -m "add <something> to <something>"`
@@ -40,3 +42,13 @@ Each time the database models change repeat the migrate and upgrade commands. (i
 ##### Adding API Dependencies
 
 ##### Adding Client Dependencies
+
+##### Code Formatting & Linting
+
+We are using Black for PEP8-compliant and uniformly-styled code ( see: https://github.com/psf/black )
+
+This is enforced using `pre-commit` hooks for git. This will run `black` on any changed files when commiting code.
+
+\*each team member _may_ need to run `pre-commit install` once for it to work?
+
+There are some nice plugins for SublimeText3 for Linting with black (`sublack` & `SublimeLinter-addon-black-for-flake`)
