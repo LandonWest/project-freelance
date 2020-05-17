@@ -17,8 +17,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 migrate = Migrate(app, db)
-# flask db migrate -m "migration message"
-# flask db upgrade
 
 # Run server
 # (this is an older way of doing it and `flask run` from root dir is preferred)

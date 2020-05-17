@@ -1,10 +1,9 @@
 from api.app import db, ma
-
 from api.utils import generate_public_id
 
 
 class User(db.Model):
-    """docstring for User"""
+    """User model and db class"""
 
     generate_user_id = generate_public_id("User")
 
@@ -12,7 +11,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(
-        db.String, unique=True, nullable=False, default=generate_user_id
+        db.String, index=True, nullable=False, unique=True, default=generate_user_id
     )
     firstname = db.Column(db.String(40), nullable=False)
     lastname = db.Column(db.String(40), nullable=False)

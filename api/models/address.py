@@ -1,10 +1,9 @@
 from api.app import db, ma
-
 from api.utils import generate_public_id
 
 
 class Address(db.Model):
-    """docstring for Address"""
+    """Address model and db class"""
 
     __tablename__ = "addresses"
 
@@ -12,7 +11,7 @@ class Address(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(
-        db.String, unique=True, nullable=False, default=generate_address_id
+        db.String, index=True, nullable=False, unique=True, default=generate_address_id
     )
     street_1 = db.Column(db.String(80), nullable=False)
     street_2 = db.Column(db.String(80))
