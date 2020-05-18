@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from api.errors import PublicIDCreationError
+from app.errors import PublicIDCreationError
 
 
 def generate_public_id(model_name):

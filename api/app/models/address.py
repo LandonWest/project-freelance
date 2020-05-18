@@ -1,9 +1,9 @@
-from api.app import db, ma
-from api.utils import generate_public_id
+from app import db, ma
+from app.utils import generate_public_id
 
 
 class Address(db.Model):
-    """Address model and db class"""
+    """Address class / db model"""
 
     __tablename__ = "addresses"
 
@@ -20,8 +20,8 @@ class Address(db.Model):
     postal_code = db.Column(db.String(2), nullable=False)
     country_code = db.Column(db.String(2), default="US")
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    user = db.relationship("User", backref=db.backref("addresses"))
+    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    # user = db.relationship("User", backref=db.backref("addresses"))
 
     def __repr__(self):
         return (
@@ -33,3 +33,22 @@ class Address(db.Model):
             + f'postal_code="{self.postal_code}", '
             + f'country_code="{self.country_code}"'
         )
+
+
+class AddressSchema(ma.SQLAlchemySchema):
+    """Address Marshmallow Schema"""
+
+    class Meta:
+        model = Address
+
+    public_id = ma.auto_field()
+    street_1 = ma.auto_field()
+    street_2 = ma.auto_field()
+    city = ma.auto_field()
+    state = ma.auto_field()
+    postal_code = ma.auto_field()
+    country_code = ma.auto_field()
+
+
+address_schema = AddressSchema()
+addresses_schema = AddressSchema(many=True)

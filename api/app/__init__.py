@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 migrate = Migrate(app, db)
 
-# Run server
-# (this is an older way of doing it and `flask run` from root dir is preferred)
-# if __name__ == ("__main__"):
-#     app.run()
+# Need to import at bottom of file to prevent circular imports
+from app.models.user import User
+from app.models.address import Address
+from app.routes import user_routes

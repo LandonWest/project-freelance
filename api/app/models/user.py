@@ -1,9 +1,9 @@
-from api.app import db, ma
-from api.utils import generate_public_id
+from app import db, ma
+from app.utils import generate_public_id
 
 
 class User(db.Model):
-    """User model and db class"""
+    """User class / db model"""
 
     generate_user_id = generate_public_id("User")
 
@@ -18,12 +18,12 @@ class User(db.Model):
     company = db.Column(db.String(120))
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(40))
-    password_hash = db.Column(db.String, nullable=False)
     personal_url_1 = db.Column(db.String(120))
     personal_url_2 = db.Column(db.String(120))
     personal_url_3 = db.Column(db.String(120))
+    password_hash = db.Column(db.String, nullable=False)
 
-    address = db.relationship("Address", uselist=False, backref=db.backref("users"))
+    # address = db.relationship("Address", uselist=False, backref=db.backref("users"))
     # photo
     # logo
 
@@ -39,3 +39,27 @@ class User(db.Model):
             + f'personal_url_2="{self.personal_url_2}", '
             + f'personal_url_3="{self.personal_url_3}"'
         )
+
+
+class UserSchema(ma.SQLAlchemySchema):
+    """User Marshmallow Schema"""
+
+    class Meta:
+        model = User
+
+    # Fields to expose
+    public_id = ma.auto_field()
+    firstname = ma.auto_field()
+    lastname = ma.auto_field()
+    company = ma.auto_field()
+    email = ma.auto_field()
+    phone = ma.auto_field()
+    personal_url_1 = ma.auto_field()
+    personal_url_2 = ma.auto_field()
+    personal_url_3 = ma.auto_field()
+    password_hash = ma.auto_field()
+    # addresses = ma.auto_field()
+
+
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
