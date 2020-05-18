@@ -1,68 +1,81 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Freelance
 
-## Available Scripts
+### Dependencies
 
-In the project directory, you can run:
+It's recommended to use a node version manager (NVM: 'https://github.com/nvm-sh/nvm')
 
-### `yarn start`
+npm / node : `nvm install node && nvm use node`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+yarn       : `brew install yarn`   (brew: 'https://brew.sh/',  yarn: 'https://classic.yarnpkg.com/en/docs/install/#mac-stable')
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+It's recommended to use a Python version manager: `brew install pyenv` (pyenv: 'https://github.com/pyenv/pyenv')
 
-### `yarn test`
+python : `pyenv install 3.8.2`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Project Setup
 
-### `yarn build`
+clone repo                   : `git clone git@github.com:LandonWest/project-freelance.git`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+cd into repo                 : `cd project-freelance`
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+install node modules locally : `npm install`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+create the api venv          : `yarn api-create-venv`
 
-### `yarn eject`
+install api dependencies     : `yarn api-install-req`   # NOTE: it will source your venv and install, but when finished it takes you back out of your venv... so you'll have to `source api/venv/bin/activate` manually to activate it again...
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+install the db               : `yarn api-setup-db`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Develop
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### Database
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+We are using Flask-Migrate which is a wrapper to use Alembic for db migrations in Flask (see: https://flask-migrate.readthedocs.io/en/latest/#api-reference )
 
-## Learn More
+Using `venv` and from within `/api`:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Create a migration file : `flask db migrate -m "add or change something"`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Run the migration       : `flask db upgrade`
 
-### Code Splitting
+Each time the database models change repeat the migrate and upgrade commands. (inverse is `flask db downgrade` # only for development!)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+#### Adding Client Dependencies
 
-### Analyzing the Bundle Size
+TODO
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+#### Adding API Dependencies
 
-### Making a Progressive Web App
+TODO
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+#### Code Formatting & Linting
 
-### Advanced Configuration
+We are using `Black` for PEP8-compliant and uniformly-styled code ( see: https://github.com/psf/black )
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+This is enforced using `pre-commit` hooks for git. This will run `black` on any changed files when commiting code.
 
-### Deployment
+\*each team member _may_ need to run `pre-commit install` once for it to work?
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+There are some nice plugins for SublimeText3 for Linting with black:
+<pre>
+{
+  'sublack': {
+      'description': 'Black integration for SublimeText',
+      'link': 'https://github.com/jgirardet/sublack'
+  }
+  'SublimeLinter-addon-black-for-flake': {
+      'description': 'Automatically configure flake8 for black',
+      'link': 'https://github.com/kaste/SublimeLinter-addon-black-for-flake'
+  },
+  'SublimeLinter': {
+      'description': 'The code linting framework for Sublime Text 3',
+      'link': 'https://github.com/SublimeLinter/SublimeLinter' 
+  },
+  'SublimeLinter-flake8': {
+      'description': 'linter plugin for SublimeLinter provides an interface to flake8',
+      'link': 'https://github.com/SublimeLinter/SublimeLinter-flake8'
+  }
+}
+</pre>
 
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- While getting used to using `Black` it's helpful to lint files frequently _before_ commiting, but you don't need to. `cmd + shift + p --> Sublack: Format file`
