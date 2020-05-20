@@ -59,7 +59,3 @@ class UserSchema(ma.SQLAlchemySchema):
     personal_url_3 = ma.auto_field()
     password_hash = ma.auto_field()
     # addresses = ma.auto_field()
-
-
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
