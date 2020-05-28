@@ -1,5 +1,4 @@
 from marshmallow.exceptions import ValidationError
-from sqlalchemy.exc import IntegrityError
 
 from app import db
 from app.models.user import User, UserSchema
@@ -23,7 +22,13 @@ class UserRequest:
             return {
                 "message": "invalid data passed",
                 "error_fields": e.messages,
-            }
+            }, 422
+
+        if User.query.filter_by(email=req_data.get('email')).first() is not None:
+            return {
+                "message": "please use a different email",
+                "error_fields": None,
+            }, 422
 
         user = User(
             firstname=req_data.get("firstname"),
@@ -34,18 +39,12 @@ class UserRequest:
             personal_url_1=req_data.get("personal_url_1"),
             personal_url_2=req_data.get("personal_url_2"),
             personal_url_3=req_data.get("personal_url_3"),
-            password_hash="need_to_implement_this",
         )
+        # Take in the plain text password from the client, hash it and save to User.password_hash
+        user.hash_password(req_data.get('password'))
 
-        try:
-            db.session.add(user)
-            db.session.commit()
-        except IntegrityError as e:
-            db.session.rollback()
-            return (
-                {"message": str(e.__cause__), "error_fields": None},
-                422,
-            )
+        db.session.add(user)
+        db.session.commit()
 
         return {"message": "User created", "data": user_schema.dump(user)}, 201
 
@@ -97,7 +96,15 @@ class UserRequest:
 
     def delete(self):
         user = User.query.filter_by(public_id=self.public_id).first()
-        if user:
-            db.session.delete(user)
-            db.session.commit()
+        if not user:
+            return (
+                {
+                    "message": f"no user found with id {self.public_id}",
+                    "error_fields": None,
+                },
+                404,
+            )
+        db.session.delete(user)
+        db.session.commit()
+
         return {"message": "User deleted", "data": user_schema.dump(user)}, 200
