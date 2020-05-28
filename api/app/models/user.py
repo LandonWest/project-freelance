@@ -1,3 +1,5 @@
+from passlib.apps import custom_app_context as pwd_context
+
 from app import db, ma
 from app.utils import generate_public_id
 
@@ -21,7 +23,7 @@ class User(db.Model):
     personal_url_1 = db.Column(db.String(120))
     personal_url_2 = db.Column(db.String(120))
     personal_url_3 = db.Column(db.String(120))
-    password_hash = db.Column(db.String, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
     # address = db.relationship("Address", uselist=False, backref=db.backref("users"))
     # photo
@@ -40,6 +42,17 @@ class User(db.Model):
             + f'personal_url_3="{self.personal_url_3}"'
         )
 
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+
+def validate_password_constraints(password):
+    if len(password) < 8:
+        raise ma.ValidationError("Password must be at least 8 characters long")
+
 
 class UserSchema(ma.SQLAlchemySchema):
     """User Marshmallow Schema"""
@@ -47,15 +60,16 @@ class UserSchema(ma.SQLAlchemySchema):
     class Meta:
         model = User
 
-    # Fields to expose
+    exclude = ("password_hash")
+
     public_id = ma.auto_field()
     firstname = ma.auto_field()
     lastname = ma.auto_field()
     company = ma.auto_field()
-    email = ma.auto_field()
+    email = ma.Email(required=True)
     phone = ma.auto_field()
-    personal_url_1 = ma.auto_field()
-    personal_url_2 = ma.auto_field()
-    personal_url_3 = ma.auto_field()
-    password_hash = ma.auto_field()
+    personal_url_1 = ma.URL()
+    personal_url_2 = ma.URL()
+    personal_url_3 = ma.URL()
+    password = ma.String(required=True, validate=validate_password_constraints, load_only=True)
     # addresses = ma.auto_field()
