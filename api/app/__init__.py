@@ -9,7 +9,8 @@ from flask_sqlalchemy import SQLAlchemy
 # Initialize app
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-# Database Config
+# Configuration
+app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
     basedir, "db.sqlite"
 )
