@@ -21,7 +21,7 @@ class InvoiceDocumentWriter(object):
         self._canvas.setFillColor(font_color)
         self._canvas.saveState()
 
-    def restore_defaults():
+    def restore_defaults(self):
         self._canvas.restoreState()
 
     def draw_header_background(self, stroke_color=None, fill_color=None):
