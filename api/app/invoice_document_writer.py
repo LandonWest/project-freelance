@@ -9,8 +9,8 @@ class InvoiceDocumentWriter(object):
 
     MARGIN = 0.75
     BILL_TO_HEIGHT = 8.25
-    QTY_WIDTH = 6
-    RATE_WIDTH = 7
+    QTY_X_POS = 6
+    RATE_X_POS = 7
 
     def __init__(
         self, canvas_obj, font_name="Helvetica", font_size=12, font_color="black",
@@ -178,8 +178,8 @@ class InvoiceDocumentWriter(object):
         # Column Names
         bottom = 6.3 * inch
         self._canvas.drawString(self.MARGIN * inch, bottom, "Description")
-        self._canvas.drawRightString(self.QTY_WIDTH * inch, bottom, "Qty.")
-        self._canvas.drawRightString(self.RATE_WIDTH * inch, bottom, "Rate/Unit")
+        self._canvas.drawRightString(self.QTY_X_POS * inch, bottom, "Qty.")
+        self._canvas.drawRightString(self.RATE_X_POS * inch, bottom, "Rate/Unit")
         self._canvas.drawRightString(7.75 * inch, bottom, "Total")
 
     def draw_line_item(
@@ -212,11 +212,11 @@ class InvoiceDocumentWriter(object):
         self._canvas.setFillColor(font_color)
         self._canvas.setFont(font_name, font_size)
         self._canvas.drawRightString(
-            self.QTY_WIDTH * inch, y_position * inch, str(quantity)
+            self.QTY_X_POS * inch, y_position * inch, str(quantity)
         )
         rate = f"{rate:.2f}" if "." in str(rate) else str(rate)
         self._canvas.drawRightString(
-            self.RATE_WIDTH * inch, y_position * inch, f"${rate}/{str(unit)}"
+            self.RATE_X_POS * inch, y_position * inch, f"${rate}/{str(unit)}"
         )
         total = int(quantity) * float(rate)
         self._canvas.drawRightString(
