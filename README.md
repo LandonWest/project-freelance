@@ -36,6 +36,8 @@ Using `venv` and from within `/api`:
 
 Create a migration file : `flask db migrate -m "add or change something"`
 
+*Make sure to import your new model in `api/app/__init__.py`
+
 Run the migration       : `flask db upgrade`
 
 Each time the database models change repeat the migrate and upgrade commands. (inverse is `flask db downgrade` # only for development!)
