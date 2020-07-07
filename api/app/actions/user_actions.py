@@ -38,10 +38,14 @@ class UserRequest:
             personal_url_3=req_data.get("personal_url_3"),
         )
         # Take in the plain text password from the client, hash it and save to User.password_hash
-        user.password_hash = user.hash_password(req_data.get("password"))
+        user.hash_password(req_data.get("password"))
 
-        db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return {"message": "There was a database error", "error_fields": None}, 500
 
         return {"message": "User created", "data": user_schema.dump(user)}, 201
 

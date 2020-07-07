@@ -81,3 +81,32 @@ There are some nice plugins for SublimeText3 for Linting with black:
 </pre>
 
 - While getting used to using `Black` it's helpful to lint files frequently _before_ commiting, but you don't need to. `cmd + shift + p --> Sublack: Format file`
+
+
+### Resources
+
+#### User
+
+For routes requiring authentication, first get an access token by calling `/users/token` and passing `Basic <email:password>` as a base64-encoded Authorization header. Then use the returned token on subsequent requests in the same manner. When using a token, the password field is not required.
+
+`GET api/v1/users/token`
+
+required headers:
+
+```"Authorization": Basic <email:password>``` (base64 encoded)
+
+`GET api/v1/users`
+
+`GET api/v1/users/<public_id>`
+
+`POST api/v1/users`
+
+required parameters: 
+```
+  {
+    firstname: string
+    lastname: string
+    email: string
+    password: string, minimum 8 characters
+  }
+```
