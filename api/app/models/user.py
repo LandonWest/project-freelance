@@ -7,6 +7,7 @@ import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, ma
+from app.models.project import Project
 from app.utils import generate_public_id
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,7 @@ class User(db.Model):
     personal_url_2 = db.Column(db.String(120))
     personal_url_3 = db.Column(db.String(120))
     password_hash = db.Column(db.String(128), nullable=False)
+    projects = db.relationship("Project", backref="users", lazy=True)
 
     # address = db.relationship("Address", uselist=False, backref=db.backref("users"))
     # photo
@@ -54,21 +56,21 @@ class User(db.Model):
         """Uses werkzeug to hash the plaintext password
         Sets the password_hash as a property of the User
         """
-        logger.debug('hashing password...')
+        logger.debug("hashing password...")
         self.password_hash = generate_password_hash(password, method="sha256")
 
     def verify_password_with_hash(self, password):
         """Uses werkzeug to check the password_hash against the plaintext password.
         Returns `True` if the password matched, `False` otherwise.
         """
-        logger.debug('verifying password with hash...')
+        logger.debug("verifying password with hash...")
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expires_in=600):  # 600 seconds == 10 minutes :)
         """Uses PyJWT to generate and return a json web token hash.
         ex: {'id': '3a2f4d24-8523-432d-87c3-50c8dddf74ff-usr', 'exp': 1590707818.466217}
         """
-        logger.debug('generating an auth token...')
+        logger.debug("generating an auth token...")
         payload = jwt.encode(
             {"id": self.public_id, "exp": time.time() + expires_in},
             os.environ["FLASK_SECRET_KEY"],
@@ -78,16 +80,16 @@ class User(db.Model):
 
     @staticmethod
     def verify_auth_token(token):
-        logger.debug('attempting to verify auth token...')
+        logger.debug("attempting to verify auth token...")
         try:
             data = jwt.decode(
                 token, os.environ["FLASK_SECRET_KEY"], algorithms=["HS256"]
             )
         except jwt.exceptions.ExpiredSignatureError:
-            logger.warn('auth token expired: ')
+            logger.warn("auth token expired: ")
             return
         except ValueError:
-            logger.error('malformed auth token: ')
+            logger.error("malformed auth token: ")
             return
 
         user = User.query.filter_by(public_id=data["id"]).first()
@@ -119,4 +121,5 @@ class UserSchema(ma.SQLAlchemySchema):
     password = ma.String(
         required=True, validate=validate_password_constraints, load_only=True
     )
+    projects = ma.auto_field()
     # addresses = ma.auto_field()

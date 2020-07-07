@@ -4,19 +4,16 @@ from app import app
 from app.actions.user_actions import UserRequest
 from app.routes import auth
 
-TOKEN_EXPIRES_IN = 600
+TOKEN_EXPIRES_IN = 3600  # 1 hour
 
 
-@app.route('/api/v1/users/token', methods=['GET'])
+@app.route("/api/v1/users/token", methods=["GET"])
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token(TOKEN_EXPIRES_IN)
     return {
-        'message': 'Auth token created',
-        'data': {
-            'token': token.decode('ascii'),
-            'expires': TOKEN_EXPIRES_IN
-        }
+        "message": "Auth token created",
+        "data": {"token": token.decode("ascii"), "expires": TOKEN_EXPIRES_IN},
     }
 
 

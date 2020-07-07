@@ -19,16 +19,13 @@ class UserRequest:
         try:
             req_data = user_schema.load(self.request_json)
         except ValidationError as e:
-            return {
-                "message": "invalid data passed",
-                "error_fields": e.messages,
-            }, 422
+            return {"message": "invalid data passed", "error_fields": e.messages}, 422
 
-        if User.query.filter_by(email=req_data.get('email')).first() is not None:
-            return {
-                "message": "please use a different email",
-                "error_fields": None,
-            }, 422
+        if User.query.filter_by(email=req_data.get("email")).first() is not None:
+            return (
+                {"message": "please use a different email", "error_fields": None},
+                422,
+            )
 
         user = User(
             firstname=req_data.get("firstname"),
@@ -41,10 +38,14 @@ class UserRequest:
             personal_url_3=req_data.get("personal_url_3"),
         )
         # Take in the plain text password from the client, hash it and save to User.password_hash
-        user.hash_password(req_data.get('password'))
+        user.hash_password(req_data.get("password"))
 
-        db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return {"message": "There was a database error", "error_fields": None}, 500
 
         return {"message": "User created", "data": user_schema.dump(user)}, 201
 
@@ -89,7 +90,7 @@ class UserRequest:
         user.personal_url_1 = req_data.get("personal_url_1")
         user.personal_url_2 = req_data.get("personal_url_2")
         user.personal_url_3 = req_data.get("personal_url_3")
-        user.password_hash = "need_to_implement_this"
+        user.password_hash = user.hash_password(req_data.get("password"))
 
         db.session.commit()
         return {"message": "User updated", "data": user_schema.dump(user)}, 200

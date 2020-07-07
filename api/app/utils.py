@@ -5,7 +5,7 @@ from app.errors import PublicIDCreationError
 
 def generate_public_id(model_name):
     """Function factory for creating public id's in the form of uuid4-model_abreviation"""
-    mapping = {"User": "usr", "Address": "adr"}
+    mapping = {"User": "usr", "Address": "adr", "Project": "prj"}
     suffix = mapping.get(model_name)
     if not suffix:
         raise PublicIDCreationError(
