@@ -28,11 +28,11 @@ def retrieve_projects():
     return project_request.retreive_all()
 
 
-# @app.route('/api/v1/projects/<string:public_id>', methods=['PUT'])
-# @auth.login_required
-# def update_project(public_id):
-#     project_request = ProjectRequest(user=g.user, request_json=request.json, public_id=public_id)
-#     return project_request.update
+@app.route("/api/v1/projects/<string:public_id>", methods=["PUT"])
+@auth.login_required
+def update_project(public_id):
+    project_request = ProjectRequest(request_json=request.json, public_id=public_id)
+    return project_request.update
 
 
 @app.route("/api/v1/projects/<string:public_id>", methods=["DELETE"])

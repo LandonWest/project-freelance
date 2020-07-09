@@ -62,34 +62,33 @@ class ProjectRequest:
         projects = Project.query.filter_by(user_id=self.user.id).all()
         return {"message": "Success", "data": projects_schema.dump(projects)}, 200
 
-    # def update(self):
-    #     user = User.query.filter_by(public_id=self.public_id).first()
-    #     if not user:
-    #         return (
-    #             {
-    #                 "message": f"no user found with id {self.public_id}",
-    #                 "error_fields": None,
-    #             },
-    #             404,
-    #         )
+    def update(self):
+        project = Project.query.filter_by(public_id=self.public_id).first()
+        if not project:
+            return (
+                {
+                    "message": f"no project found with id {self.public_id}",
+                    "error_fields": None,
+                },
+                404,
+            )
 
-    #     try:
-    #         req_data = user_schema.load(self.request_json)
-    #     except ValidationError as e:
-    #         return {"message": "invalid data passed", "error_fields": e.messages}, 422
+        try:
+            req_data = project_schema.load(self.request_json)
+        except ValidationError as e:
+            return {"message": "invalid data passed", "error_fields": e.messages}, 422
 
-    #     user.firstname = req_data.get("firstname")
-    #     user.lastname = req_data.get("lastname")
-    #     user.company = req_data.get("company")
-    #     user.email = req_data.get("email")
-    #     user.phone = req_data.get("phone")
-    #     user.personal_url_1 = req_data.get("personal_url_1")
-    #     user.personal_url_2 = req_data.get("personal_url_2")
-    #     user.personal_url_3 = req_data.get("personal_url_3")
-    #     user.password_hash = user.hash_password(req_data.get("password"))
+        project.title = req_data.get("title")
+        project.description = req_data.get("description")
+        project.start_date = req_data.get("start_date")
+        project.due_date = req_data.get("due_date")
+        project.rate_cents = req_data.get("rate_cents")
+        project.rate_units = req_data.get("rate_units")
+        project.completed_date = req_data.get("completed_date")
+        project.invoice_frequency = req_data.get("invoice_frequency")
 
-    #     db.session.commit()
-    #     return {"message": "User updated", "data": user_schema.dump(user)}, 200
+        db.session.commit()
+        return {"message": "project updated", "data": project_schema.dump(project)}, 200
 
     def delete(self):
         project = Project.query.filter_by(
