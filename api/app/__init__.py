@@ -24,4 +24,4 @@ migrate = Migrate(app, db)
 from app.models.user import User
 from app.models.address import Address
 from app.models.project import Project
-from app.routes import user_routes
+from app.routes import user_routes, project_routes
