@@ -109,7 +109,7 @@ class UserSchema(ma.SQLAlchemySchema):
 
     exclude = "password_hash"
 
-    public_id = ma.auto_field()
+    public_id = ma.auto_field(dump_only=True)
     firstname = ma.auto_field()
     lastname = ma.auto_field()
     company = ma.auto_field()
